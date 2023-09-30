@@ -16,10 +16,12 @@ public class PlayerController : MonoBehaviour
     private int availableJumps;
 
     public DoubleJumpAbility doubleJumpAbility; // Reference to the DoubleJumpAbility scriptable object
+    public Animator animator; // Reference to the Animator component
 
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>(); // Initialize the animator here
     }
 
     private void Start()
@@ -52,7 +54,19 @@ public class PlayerController : MonoBehaviour
         {
             velocity.y = Mathf.Sqrt(jumpForce * -2 * gravity);
             availableJumps--;
+
+            // Set the animator parameter "IsJumping" to trigger the jump animation
+            animator.SetTrigger("IsJumping");
         }
+
+        // Calculate the character's speed (you can adjust this as needed)
+        float speed = Mathf.Abs(moveInput);
+
+        // Set the animator parameter "Speed"
+        animator.SetFloat("Speed", speed);
+
+        // Set the animator parameter "IsGrounded" to control the idle animation
+        animator.SetBool("IsGrounded", isGrounded);
 
         // Apply movement and gravity
         controller.Move((move + velocity) * Time.deltaTime);
