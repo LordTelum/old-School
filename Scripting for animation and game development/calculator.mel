@@ -1,0 +1,94 @@
+global proc float calculate(string $operation, float $numbers[])
+{
+    float $result;
+    
+    if ($operation == "Add") 
+    {
+        $result = 0;
+        for ($num in $numbers)
+        {
+            $result += $num;
+        }
+    }
+    else if ($operation == "Subtract")
+    {
+        $result = $numbers[0];
+        for ($i = 1; $i < size($numbers); $i++)
+        {
+            $result -= $numbers[$i];
+        }
+    }
+    else if ($operation == "Multiply")
+    {
+        $result = 1;
+        for ($num in $numbers)
+        {
+            $result *= $num;
+        }
+    }
+    else if ($operation == "Divide")
+    {
+        $result = $numbers[0];
+        for ($i = 1; $i < size($numbers); $i++)
+        {
+            if ($numbers[$i] == 0)
+            {
+                error "You cannot divide by zero";
+            }
+            else
+            {
+                $result /= $numbers[$i];
+            }
+        }
+    }
+    else if ($operation == "Power")
+    {
+        if (size($numbers) == 2)
+        {
+            $result = 1;
+            for ($i = 0; $i < $numbers[1]; $i++)
+            {
+                $result *= $numbers[0];
+            }
+        }
+        else
+        {
+            error "Power operation requires two arguments: base and exponent.";
+        }
+    }
+    else if ($operation == "Mean")
+    {
+        $result = 0;
+        int $count = size($numbers);
+        for ($num in $numbers)
+        {
+            $result += $num;
+        }
+        $result /= $count;
+    }
+    else if ($operation == "Median")
+    {
+        int $count = size($numbers);
+        float $sortedNumbers[] = `sort $numbers`;
+
+        if ($count % 2 == 0)
+        {
+            int $middle = $count / 2;
+            $result = ($sortedNumbers[$middle - 1] + $sortedNumbers[$middle]) / 2.0;
+        }
+        else
+        {
+            int $middle = ($count - 1) / 2;
+            $result = $sortedNumbers[$middle];
+        }
+    }
+    else
+    {
+        error ("Invalid operation: " + $operation);
+    }
+    
+    return $result;
+}
+
+float $result = calculate("Multiply", {3, 2, 8, 6, 3, 7, 4, 2, 6, 3, 7, 8, 5, 2, 2});
+print("Result: " + $result);
