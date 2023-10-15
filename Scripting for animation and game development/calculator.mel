@@ -90,5 +90,74 @@ global proc float calculate(string $operation, float $numbers[])
     return $result;
 }
 
-float $result = calculate("Multiply", {3, 2, 8, 6, 3, 7, 4, 2, 6, 3, 7, 8, 5, 2, 2});
-print("Result: " + $result);
+global proc calculatorUI()
+{
+    global string $numberField[]; // Declare inside the procedure
+    
+    // Check if the window exists. If it does, delete it.
+    if (`window -exists calcWindow`)
+    {
+        deleteUI -window calcWindow;
+    }
+    
+    // Create main window
+    window -title "Calculator" calcWindow;
+    columnLayout -adjustableColumn true;
+    
+    // Dropdown for operations
+    string $operations[] = {"Add", "Subtract", "Multiply", "Divide", "Power", "Mean", "Median"};
+    optionMenu -label "Operation" operationMenu;
+    for ($op in $operations)
+    {
+        menuItem -label $op;
+    }
+
+    // TextFields for numbers
+    text -label "Numbers:";
+    rowLayout -numberOfColumns 2 numbersRow;
+    for ($i = 0; $i < 2; $i++)
+    {
+        $numberField[$i] = `textField -width 40`; // Assign the name to the global array
+    }
+    setParent ..;
+
+    // Button to execute
+    button -label "Calculate" -command "executeCalculation()";
+
+    // Result field
+    textFieldGrp -label "Result" -editable false resultField;
+
+    // Display the window
+    showWindow calcWindow;
+}
+
+global proc executeCalculation()
+{
+    global string $numberField[]; // Declare inside the procedure
+
+    string $operation = `optionMenu -query -value operationMenu`;
+    float $numbers[];
+
+    for ($i = 0; $i < 2; $i++)
+    {
+        string $num = `textField -query -text $numberField[$i]`; // Access using the global array
+        if ($num != "")
+        {
+            float $floatNum = $num;
+            $numbers[size($numbers)] = $floatNum;
+        }
+    }
+
+    float $result = calculate($operation, $numbers);
+    textFieldGrp -edit -text $result resultField;
+}
+
+// Example of how to call the UI
+calculatorUI();
+
+
+
+
+
+// Example of how to call the UI
+calculatorUI();
