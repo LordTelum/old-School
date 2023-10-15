@@ -1,0 +1,76 @@
+global proc randomDisperse(int $numDuplicates, float $minX, float $maxX, float $minY, float $maxY, float $minZ, float $maxZ) {
+    // Get selected objects
+    string $selected[] = `ls -sl`;
+
+    // Check if there are selected objects
+    if (size($selected) == 0) {
+        warning "dumb dumb select an object.";
+        return;
+    }
+
+    // Loop to duplicate and randomly place objects
+    for ($obj in $selected) {
+        for ($i = 0; $i < $numDuplicates; $i++) {
+            // Duplicate the object
+            string $dup[] = `duplicate $obj`;
+            
+            // Generate random coordinates
+            float $randX = `rand $minX $maxX`;
+            float $randY = `rand $minY $maxY`;
+            float $randZ = `rand $minZ $maxZ`;
+            
+            // Set the position of the duplicated object
+            move $randX $randY $randZ $dup[0];
+        }
+    }
+}
+
+// UI for the Random Disperse Tool
+global proc randomDisperseUI() {
+    // Check if the window exists and delete
+    if (`window -exists randomDisperseWin`) {
+        deleteUI randomDisperseWin;
+    }
+
+    // Create the window
+    window -title "Random Disperse Tool" -widthHeight 300 200 randomDisperseWin;
+
+    columnLayout -adjustableColumn true;
+
+    // Number of duplicates field
+    intFieldGrp -label "Number of Duplicates" -value1 1 numDuplicatesField;
+
+    // X range fields
+    floatFieldGrp -numberOfFields 2 -label "X Range" -value1 -10 -value2 10 xRangeField;
+
+    // Y range fields
+    floatFieldGrp -numberOfFields 2 -label "Y Range" -value1 -10 -value2 10 yRangeField;
+
+    // Z range fields
+    floatFieldGrp -numberOfFields 2 -label "Z Range" -value1 -10 -value2 10 zRangeField;
+
+    // Button to execute
+    button -label "Randomly Disperse" -command "executeRandomDisperse()";
+
+    //Exit Button
+    // Exit button
+    button -label "Exit" -command "deleteUI randomDisperseWin";
+
+    showWindow randomDisperseWin;
+}
+
+// Function to execute the main random disperse function based on UI values
+global proc executeRandomDisperse() {
+    int $numDups = `intFieldGrp -query -value1 numDuplicatesField`;
+    float $minX = `floatFieldGrp -query -value1 xRangeField`;
+    float $maxX = `floatFieldGrp -query -value2 xRangeField`;
+    float $minY = `floatFieldGrp -query -value1 yRangeField`;
+    float $maxY = `floatFieldGrp -query -value2 yRangeField`;
+    float $minZ = `floatFieldGrp -query -value1 zRangeField`;
+    float $maxZ = `floatFieldGrp -query -value2 zRangeField`;
+
+    randomDisperse($numDups, $minX, $maxX, $minY, $maxY, $minZ, $maxZ);
+}
+
+// To launch the UI, call this function:
+randomDisperseUI();
