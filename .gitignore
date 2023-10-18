@@ -66,3 +66,7 @@ $RECYCLE.BIN/
 *.userprefs
 *.csproj
 ScriptingForArtists/ScriptingForArtists-csharp.sln
+
+# Log files
+*.log
+
