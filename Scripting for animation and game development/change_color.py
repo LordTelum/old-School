@@ -1,12 +1,7 @@
 import maya.cmds as cmds
 
 def change_color(color_index):
-    """
-    Changes the override color for the shape node of the selected objects.
 
-    Args:
-    color_index (int): The index of the color to set. Should be a value between 0 and 31.
-    """
     # Check if the color index is within the valid range
     if not (0 <= color_index <= 31):
         print("Invalid color index. Please provide a value between 0 and 31.")
