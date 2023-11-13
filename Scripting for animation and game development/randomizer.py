@@ -10,7 +10,7 @@ def duplicate_and_disperse(num_duplicates, minX, maxX, minY, maxY, minZ, maxZ):
         return
 
     # Iterate over the number of duplicates required
-    for _ in range(num_duplicates):
+    for i in range(num_duplicates):
         # Duplicate selected objects
         duplicates = cmds.duplicate(selected_objects)
 
